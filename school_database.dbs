@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="MyDb" id="Project_24e0" database="MySql" >
+	<schema name="school_database" >
+		<table name="admin" >
+			<comment><![CDATA[System administrator]]></comment>
+			<column name="username" type="varchar" length="50" jt="12" mandatory="y" >
+				<comment><![CDATA[admin username]]></comment>
+			</column>
+			<column name="first_name" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[admin's first name]]></comment>
+			</column>
+			<column name="middle_name" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[admin's middle name]]></comment>
+			</column>
+			<column name="last_name" type="varchar" length="20" jt="12" >
+				<comment><![CDATA[admin's last name]]></comment>
+			</column>
+			<column name="email" type="varchar" length="100" jt="12" >
+				<comment><![CDATA[admin's email]]></comment>
+			</column>
+			<index name="pk_admin_username" unique="PRIMARY_KEY" >
+				<column name="username" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="course" >
+			<comment><![CDATA[Subject taught by a teacher and studied by a student]]></comment>
+			<column name="course_code" type="varchar" length="10" jt="12" mandatory="y" >
+				<comment><![CDATA[code that identitfies course]]></comment>
+			</column>
+			<column name="course_title" type="varchar" length="50" jt="12" mandatory="y" >
+				<comment><![CDATA[Title of the course]]></comment>
+			</column>
+			<column name="credit_value" type="int" jt="4" mandatory="y" unsigned="y" >
+				<comment><![CDATA[Number x10 of learning hours of the course]]></comment>
+			</column>
+			<column name="teacher_matricule" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[Matricule of teacher]]></comment>
+			</column>
+			<index name="pk_course_course_code" unique="PRIMARY_KEY" >
+				<column name="course_code" />
+			</index>
+			<fk name="fk_course_teacher" to_schema="school_database" to_table="teacher" >
+				<fk_column name="teacher_matricule" pk="teacher_matricule" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="marks" >
+			<comment><![CDATA[Mark allocated to students]]></comment>
+			<column name="mark_id" type="int" jt="4" mandatory="y" unsigned="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+				<comment><![CDATA[id number of student's mark]]></comment>
+			</column>
+			<column name="student_matricule" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[Student's matricule]]></comment>
+			</column>
+			<column name="teacher_matricule" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[Teacher's matricule number]]></comment>
+			</column>
+			<column name="course_code" type="varchar" length="50" jt="12" mandatory="y" >
+				<comment><![CDATA[Course code of course]]></comment>
+			</column>
+			<index name="pk_marks_mark_id" unique="PRIMARY_KEY" >
+				<column name="mark_id" />
+			</index>
+			<fk name="fk_marks_student" to_schema="school_database" to_table="student" >
+				<fk_column name="student_matricule" pk="student_matricule" />
+			</fk>
+			<fk name="fk_marks_teacher" to_schema="school_database" to_table="teacher" >
+				<fk_column name="teacher_matricule" pk="teacher_matricule" />
+			</fk>
+			<fk name="fk_marks_course" to_schema="school_database" to_table="course" >
+				<fk_column name="course_code" pk="course_code" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="student" >
+			<comment><![CDATA[Table holding student data]]></comment>
+			<column name="student_matricule" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[matricule number of student]]></comment>
+			</column>
+			<column name="first_name" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[Student's first name]]></comment>
+			</column>
+			<column name="middle_name" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[Student's middle name]]></comment>
+			</column>
+			<column name="last_name" type="varchar" length="20" jt="12" >
+				<comment><![CDATA[Student's last name]]></comment>
+			</column>
+			<column name="email" type="varchar" length="100" jt="12" >
+				<comment><![CDATA[student's email address]]></comment>
+			</column>
+			<column name="dob" type="date" jt="91" mandatory="y" >
+				<comment><![CDATA[student's date of birth]]></comment>
+			</column>
+			<column name="teacher_matricule" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[Teacher's matricule]]></comment>
+			</column>
+			<column name="mark_id" type="int" jt="4" mandatory="y" unsigned="y" >
+				<comment><![CDATA[id number of student's mark]]></comment>
+			</column>
+			<index name="pk_student_student_matricule" unique="PRIMARY_KEY" >
+				<column name="student_matricule" />
+			</index>
+			<fk name="fk_student_teacher" to_schema="school_database" to_table="teacher" >
+				<fk_column name="teacher_matricule" pk="teacher_matricule" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="student_course" >
+			<comment><![CDATA[intermediary table to link student and course M:N relationship]]></comment>
+			<column name="student_matricule" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[Matricule of student]]></comment>
+			</column>
+			<column name="course_code" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[Course code of a course]]></comment>
+			</column>
+			<index name="pk_student_course_student_matricule" unique="PRIMARY_KEY" >
+				<column name="student_matricule" />
+			</index>
+			<fk name="fk_student_course_student" to_schema="school_database" to_table="student" >
+				<fk_column name="student_matricule" pk="student_matricule" />
+			</fk>
+			<fk name="fk_student_course_course" to_schema="school_database" to_table="course" >
+				<fk_column name="course_code" pk="course_code" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="teacher" >
+			<comment><![CDATA[Lecturer or tutor of a course]]></comment>
+			<column name="teacher_matricule" type="varchar" length="20" jt="12" mandatory="y" >
+				<comment><![CDATA[Teacher's matricule]]></comment>
+			</column>
+			<column name="first_name" type="varchar" length="20" jt="12" >
+				<comment><![CDATA[Teacher's first name]]></comment>
+			</column>
+			<column name="middle_name" type="varchar" length="20" jt="12" >
+				<comment><![CDATA[Teacher's middle name]]></comment>
+			</column>
+			<column name="last_name" type="varchar" length="20" jt="12" >
+				<comment><![CDATA[Teacher's last name]]></comment>
+			</column>
+			<column name="email" type="varchar" length="100" jt="12" >
+				<comment><![CDATA[Teacher's email address]]></comment>
+			</column>
+			<column name="mark_id" type="int" jt="4" mandatory="y" unsigned="y" >
+				<comment><![CDATA[Id number of mark allocated by teacher]]></comment>
+			</column>
+			<index name="pk_teacher_teacher_matricule" unique="PRIMARY_KEY" >
+				<column name="teacher_matricule" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+	</schema>
+	<connector name="MyDb" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.23.jar" driver_desc="Standard" host="localhost" port="3306" instance="school_database" user="manuel" passwd="QE1hbnVlbDEyMzQ=" />
+	<layout name="Main Layout" id="Layout_946" show_relation="columns" >
+		<entity schema="school_database" name="admin" color="C1D8EE" x="864" y="368" />
+		<entity schema="school_database" name="course" color="C1D8EE" x="560" y="400" />
+		<entity schema="school_database" name="marks" color="C1D8EE" x="96" y="496" />
+		<entity schema="school_database" name="student" color="C1D8EE" x="48" y="208" />
+		<entity schema="school_database" name="student_course" color="C1D8EE" x="576" y="192" />
+		<entity schema="school_database" name="teacher" color="C1D8EE" x="304" y="288" />
+		<callout x="96" y="48" pointer="Round" >
+			<comment><![CDATA[Create new tables by right-clicking the layout (diagram).
+Create multiple layouts with the same or different tables.
+Saving the model to file will also save the layouts and schema structure.]]></comment>
+		</callout>
+	</layout>
+</project>
